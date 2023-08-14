@@ -2,38 +2,56 @@ def yardForMeter(yards):
     meters = yards * 0.9144
     return meters
 
-def yardForFeet(yard):
-    feet = yard * 3
-    return feet
+def yardForFoot(yard):
+    foot = yard * 3
+    return foot
 
-def feetForMeter(feet):
-    meter = feet * 0.3048
+def footForMeter(foot):
+    meter = foot * 0.3048
     return meter
 
-opcoes = {
-    1: ("Jarda para Metros", yardForMeter),
-    2: ("Jarda para Pés", yardForFeet),
-    3: ("Pés para Metros", feetForMeter)
+def footForYard(foot):
+    yards = foot / 3
+    return yards
+
+def meterForYard(meters):
+    yards = meters / 0.9144
+    return yards
+
+def meterForFoot(meters):
+    foot = meters / 0.3048
+    return foot
+
+def invalidOption():
+    print("Opção INVÁLIDA")
+
+conversorOptions = {
+    "metro": ("Metro", {"jarda": meterForYard, "pes": meterForFoot}),
+    "pes": ("Pés", {"jarda": footForYard, "metro": footForMeter}),
+    "jarda": ("Jarda", {"metro": yardForMeter, "pes": yardForFoot})
 }
 
-# Solicita ao usuário a escolha da conversão
-print("Escolha a conversão:")
-print("1 - Jarda para Metros")
-print("2 - Jarda para Pés")
-print("3 - Pés para Metros")
-inputOption = int(input("Digite o número da opção: "))
+print("Escolha a unidade de entrada:")
+for key, (description, _) in conversorOptions.items():
+    print(f"- {key}")
 
-if inputOption == 1:
-    yards = float(input("Digite o valor em jardas: "))
-    meters = yardForMeter(yards)
-    print(f"{yards} jardas equivalem a {meters} metros.")
-elif inputOption == 2:
-    yard = float(input("Digite o valor em jardas: "))
-    feet = yardForFeet(yard)
-    print(f"{yard} jardas equivalem a {feet} pés.")
-elif inputOption == 3:
-    feet = float(input("Digite o valor em pés: "))
-    meters = feetForMeter(feet)
-    print(f"{feet} pés equivalem a {meters} metros.")
+input_unit = input("Digite a unidade de entrada: ")
+
+if input_unit not in conversorOptions:
+    invalidOption()
 else:
-    print("Opção inválida.")
+    value = float(input("Digite o valor: "))
+    
+    print("Escolha a unidade de saída:")
+    for key in conversorOptions[input_unit][1]:
+        print(f"- {key}")
+    
+    output_unit = input("Digite a unidade de saída: ")
+
+    if output_unit not in conversorOptions[input_unit][1]:
+        invalidOption()
+    else:
+        conversion_function = conversorOptions[input_unit][1][output_unit]
+        result = conversion_function(value)
+
+        print(f"{value} {conversorOptions[input_unit][0]} equivalem a {result:.3f} {output_unit}.")
